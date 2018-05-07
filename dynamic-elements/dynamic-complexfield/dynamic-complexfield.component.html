@@ -1,0 +1,34 @@
+<div class="td-dynamic-complexfield-wrapper">
+  <!-- <mat-form-field class="td-dynamic-complexfield-field">
+    <input #elementComplexField
+            matInput
+            [(ngModel)]="value"
+            [formControl]="control"
+            [placeholder]="label"
+            [type]="type"
+            [required]="required"/>
+  </mat-form-field> -->
+  <mat-form-field class="td-dynamic-complexfield-field">
+      <input #elementComplexField
+             matInput
+             [(ngModel)]="value"
+             [formControl]="control"
+             placeholder="label"
+             [matAutocomplete]="auto"
+             [type]="type",
+             [required]="required">
+    
+      <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let object of filteredObjects | async" [value]="object.title">
+              <span>
+                  <mat-icon>{{object.icon}}</mat-icon>
+                  <span class="title">
+                      {{object.title}}
+                  </span>
+                  <small class="subtitle">{{object.subtitle}}</small>
+              </span>
+          </mat-option>
+      </mat-autocomplete>
+  </mat-form-field>
+  
+</div>

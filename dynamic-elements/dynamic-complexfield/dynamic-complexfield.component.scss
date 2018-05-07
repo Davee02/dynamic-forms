@@ -1,0 +1,31 @@
+.td-dynamic-input-wrapper {
+  // [layout="row"]
+  flex-direction: row;
+  // [layout]
+  display: flex;
+  box-sizing: border-box;
+  .td-dynamic-input-field {
+    // [flex]
+    flex: 1;
+    box-sizing: border-box;
+  }
+  
+  // height: fit-content;
+  // width: fit-content;
+}
+
+
+.complexfield mat-icon {
+  // height: 100px;
+}
+
+.title {
+  position: absolute;
+  top: -8px;
+}
+
+.subtitle {
+  position: absolute;
+  top: 10px;
+  font-weight: 100;
+}
