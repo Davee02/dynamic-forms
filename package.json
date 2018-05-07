@@ -9,8 +9,7 @@
     "dynamic",
     "forms"
   ],
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/teradata/covalent.git"
@@ -30,6 +29,6 @@
     "Steven Ov <steven.ov@teradata.com>"
   ],
   "dependencies": {
-    "@covalent/core": "^0.0.0-COVALENT"
+    "@covalent/core": "^1.0.0"
   }
 }
