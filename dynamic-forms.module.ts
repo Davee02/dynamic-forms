@@ -69,6 +69,7 @@ const TD_DYNAMIC_FORMS_ENTRY_COMPONENTS: Type<any>[] = [
     MatIconModule,
     MatButtonModule,
     MatDatepickerModule,
+    MatAutocompleteModule,
     CovalentCommonModule,
     CovalentFileModule,
   ],

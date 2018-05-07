@@ -5,14 +5,14 @@ import { startWith, map } from 'rxjs/operators';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
 
-export const INPUT_INPUT_CONTROL_VALUE_ACCESSOR: any = {
+export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => TdDynamicComplexfieldComponent),
   multi: true,
 };
 
 @Component({
-  providers: [ INPUT_INPUT_CONTROL_VALUE_ACCESSOR ],
+  providers: [ COMPLEXFIELD_CONTROL_VALUE_ACCESSOR ],
   selector: 'td-dynamic-complexfield',
   styleUrls: [ './dynamic-complexfield.component.scss' ],
   templateUrl: './dynamic-complexfield.component.html',
