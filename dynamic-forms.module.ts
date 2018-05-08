@@ -33,7 +33,7 @@ import { TdDynamicSelectComponent } from './dynamic-elements/dynamic-select/dyna
 import { TdDynamicDatepickerComponent } from './dynamic-elements/dynamic-datepicker/dynamic-datepicker.component';
 // Complex Element
 import { TdDynamicComplexfieldComponent } from './dynamic-elements/dynamic-complexfield/dynamic-complexfield.component';
-import { DataProvider } from 'dynamic-elements/dynamic-complexfield/data-provider';
+import { DataProvider } from './services/data-provider';
 
 const TD_DYNAMIC_FORMS: Type<any>[] = [
   TdDynamicFormsComponent,
