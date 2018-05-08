@@ -33,7 +33,6 @@ import { TdDynamicSelectComponent } from './dynamic-elements/dynamic-select/dyna
 import { TdDynamicDatepickerComponent } from './dynamic-elements/dynamic-datepicker/dynamic-datepicker.component';
 // Complex Element
 import { TdDynamicComplexfieldComponent } from './dynamic-elements/dynamic-complexfield/dynamic-complexfield.component';
-import { DataProvider } from './services/data-provider';
 
 // OAuth
 import { OAuthModule } from 'angular-oauth2-oidc/src';
@@ -83,8 +82,7 @@ const TD_DYNAMIC_FORMS_ENTRY_COMPONENTS: Type<any>[] = [
     TD_DYNAMIC_FORMS_ENTRY_COMPONENTS,
   ],
   providers: [
-    DYNAMIC_FORMS_PROVIDER,
-    DataProvider
+    DYNAMIC_FORMS_PROVIDER
   ],
   entryComponents: [ TD_DYNAMIC_FORMS_ENTRY_COMPONENTS ],
 })

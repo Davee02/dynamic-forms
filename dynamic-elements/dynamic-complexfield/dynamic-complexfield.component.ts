@@ -14,7 +14,10 @@ export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
 };
 
 @Component({
-  providers: [ COMPLEXFIELD_CONTROL_VALUE_ACCESSOR ],
+  providers: [
+    COMPLEXFIELD_CONTROL_VALUE_ACCESSOR,
+    DataProvider
+  ],
   selector: 'td-dynamic-complexfield',
   styleUrls: [ './dynamic-complexfield.component.scss' ],
   templateUrl: './dynamic-complexfield.component.html',
@@ -26,50 +29,38 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   private text: string = '';
   private loadingData: boolean = false;
 
-  queryId: string = undefined;
-  
-  endpoint: string = undefined;
-  
-  title: string = undefined;
-  
-  subtitle: string = undefined;
-  
-  icon: string = "image";
-
+  // autocomplete properties
+  filteredObjects: Observable<any[]>;
+  objects: any[] = new Array<any>();
   control: FormControl;
 
-  label: string = '';
-
+  // inputitems
   type: string = undefined;
-
   required: boolean = undefined;
-
-  filteredObjects: Observable<any[]>;
-
-  objects: any[] = new Array<any>();
-
+  source: string = undefined;
+  label: string = '';
+  title: string = undefined;
+  subtitle: string = undefined;
+  icon: string = "image";
+  
   constructor(dataProvider: DataProvider) {
     super();
     this.data_provider = dataProvider;
     this.control = new FormControl();
-    this.control.valueChanges.subscribe(() => {
-        console.log('changed')
-    })
   }
 
   filterObjects(text: string, skip: number = 0) {
     if(!text) {
       text = '';
     }
-    console.log('text: ', text);
-    console.log('skip: ', skip);
+    
     this.text = text;
-    this.filteredObjects = this.data_provider.fetchData(this.text, skip, this.show);
+    this.filteredObjects = this.data_provider.fetchData(this.source, this.text, skip, this.show);
   }
 
   // load next 5 objects
   loadMore() {
     this.skip += 5;
-    this.filteredObjects = this.data_provider.fetchData(this.text, this.skip, this.show);
+    this.filteredObjects(this.text, this.skip)
   }
 }
