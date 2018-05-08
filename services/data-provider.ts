@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { OAuthService } from 'angular-oauth2-oidc/src';
 import 'rxjs/add/observable/of';
 
 const BASE_URL = 'http://api.docugate.ch/v1/function';
@@ -9,6 +10,8 @@ const BASE_URL = 'http://api.docugate.ch/v1/function';
 export class DataProvider {
     http: HttpClient;
     service: DataProvider;
+    headers: HttpHeaders;
+    oauth: OAuthService;
     source: string;
     skip: number;
     show: number;
@@ -176,20 +179,27 @@ export class DataProvider {
         }
     ];
 
-    constructor(http: HttpClient) {
+    constructor(http: HttpClient, oauth: OAuthService) {
         this.http = http;
+        this.oauth = oauth;
         // this is a random guid
         this.source = '9a972dbc-2f9b-4b50-880d-480d578714f9'
     }
 
     // fetches data which matches the text param 
     fetchData(text, skip, show) {
+        this.setHeaders();
         // let url = `${BASE_URL}/${this.source}/invoke?text=${this.text}&skip=${this.skip}&show=${this.show}`;
         // console.debug('fetching data from: ', url);
-
         // return this.http.get<any[]>(url);
-
         let results = this.mock_data.filter(d => d.title.toLowerCase().indexOf(text.toLowerCase()) === 0);
         return Observable.of(results.slice(skip, show));
+    }
+
+    setHeaders() {
+        this.headers = new HttpHeaders({
+            'Authorization': `Bearer ${this.oauth.getAccessToken()}`
+        })
+        console.log('OAUTH: ', this.headers)
     }
 }
