@@ -19,7 +19,7 @@
              [required]="required">
     
       <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let object of filteredObjects | async" [value]="object.title">
+          <mat-option *ngFor="let object of filteredObjects | async" [value]="object.title" (scroll)="loadMore()">
               <span>
                   <mat-icon>{{object.icon}}</mat-icon>
                   <span class="title">

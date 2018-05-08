@@ -1,6 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
-import { Observable, subscribe } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { startWith, map } from 'rxjs/operators';
 import 'rxjs/add/operator/debounceTime';
 
@@ -21,6 +21,10 @@ export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
 })
 export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor implements ControlValueAccessor {
   private data_provider: DataProvider;
+  private skip: number = 0;
+  private show: number = 5;
+  private text: string = '';
+  private loadingData: boolean = false;
 
   queryId: string = undefined;
   
@@ -51,17 +55,19 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
     this.filteredObjects = this.control.valueChanges
         .debounceTime(500)
         .pipe(
-          startWith(''),
-          map(text => text ? this.filterObjects(text) : this.objects.slice())
+            startWith(''),
+            map(text => text ? this.filterObjects(text) : this.objects.slice())
         );
   }
 
-  filterObjects(text: string) {
-    this.data_provider.fetchData(text, 0, 5)
-        .subscribe(data => {
-            this.objects = data;
-        }, (error) => {
-            console.warn(error);
-        })
+  filterObjects(text: string, skip: number = 0) {
+    this.text = text;
+    return this.data_provider.fetchData(this.text, skip, this.show);
+  }
+
+  // load next 5 objects
+  loadMore() {
+    this.skip += 5;
+    this.filteredObjects = Observable.of(this.filterObjects(this.text, this.skip));
   }
 }
