@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import 'rxjs/add/observable/of';
 
 const BASE_URL = 'http://api.docugate.ch/v1/function';
 
@@ -175,13 +176,10 @@ export class DataProvider {
         }
     ];
 
-    constructor(
-        service: DataProvider,
-        http: HttpClient) {
-            this.http = http;
-            this.service = service;
-            // this is a random guid
-            this.source = '9a972dbc-2f9b-4b50-880d-480d578714f9'
+    constructor(http: HttpClient) {
+        this.http = http;
+        // this is a random guid
+        this.source = '9a972dbc-2f9b-4b50-880d-480d578714f9'
     }
 
     // fetches data which matches the text param 

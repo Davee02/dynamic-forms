@@ -5,7 +5,7 @@ import { startWith, map } from 'rxjs/operators';
 import 'rxjs/add/operator/debounceTime';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
-import { DataProvider } from './data-provider';
+import { DataProvider } from '../../services/data-provider';
 
 export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -52,22 +52,24 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
     super();
     this.data_provider = dataProvider;
     this.control = new FormControl();
-    this.filteredObjects = this.control.valueChanges
-        .debounceTime(500)
-        .pipe(
-            startWith(''),
-            map(text => text ? this.filterObjects(text) : this.objects.slice())
-        );
+    this.control.valueChanges.subscribe(() => {
+        console.log('changed')
+    })
   }
 
   filterObjects(text: string, skip: number = 0) {
+    if(!text) {
+      text = '';
+    }
+    console.log('text: ', text);
+    console.log('skip: ', skip);
     this.text = text;
-    return this.data_provider.fetchData(this.text, skip, this.show);
+    this.filteredObjects = this.data_provider.fetchData(this.text, skip, this.show);
   }
 
   // load next 5 objects
   loadMore() {
     this.skip += 5;
-    this.filteredObjects = Observable.of(this.filterObjects(this.text, this.skip));
+    this.filteredObjects = this.data_provider.fetchData(this.text, this.skip, this.show);
   }
 }
