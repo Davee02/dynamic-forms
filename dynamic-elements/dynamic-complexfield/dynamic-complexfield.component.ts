@@ -1,9 +1,11 @@
 import { Component, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable, subscribe } from 'rxjs/Observable';
 import { startWith, map } from 'rxjs/operators';
+import 'rxjs/add/operator/debounceTime';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
+import { DataProvider } from './data-provider';
 
 export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -18,6 +20,8 @@ export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   templateUrl: './dynamic-complexfield.component.html',
 })
 export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor implements ControlValueAccessor {
+  private data_provider: DataProvider;
+
   queryId: string = undefined;
   
   endpoint: string = undefined;
@@ -40,44 +44,24 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
 
   objects: any[] = new Array<any>();
 
-  constructor() {
+  constructor(dataProvider: DataProvider) {
     super();
-    this.loadObjects();
+    this.data_provider = dataProvider;
     this.control = new FormControl();
     this.filteredObjects = this.control.valueChanges
-      .pipe(
-        startWith(''),
-        map(state => state ? this.filterStates(state) : this.objects.slice())
-      );
+        .debounceTime(500)
+        .pipe(
+          startWith(''),
+          map(text => text ? this.filterObjects(text) : this.objects.slice())
+        );
   }
 
-  filterStates(title: string) {
-    return this.objects.filter(state =>
-      state.title.toLowerCase().indexOf(title.toLowerCase()) === 0);
-  }
-
-  loadObjects() {
-    this.objects = [
-      {
-        "name": "person",
-        "type": "complex",
-        "required": true,
-        "queryId": "00000000-0000-0000-0000-000000000000",
-        "label": "Adressat",
-        "title": "Max Muster",
-        "subtitle": "Neustadtstrasse 25",
-        "icon": "image"
-      },
-      {
-        "name": "person",
-        "type": "complex",
-        "required": true,
-        "queryId": "00000000-0000-0000-0000-000000000000",
-        "label": "Adressat",
-        "title": "Hans Holzer",
-        "subtitle": "Waldweg 25",
-        "icon": "person"
-      }
-    ];
+  filterObjects(text: string) {
+    this.data_provider.fetchData(text, 0, 5)
+        .subscribe(data => {
+            this.objects = data;
+        }, (error) => {
+            console.warn(error);
+        })
   }
 }
