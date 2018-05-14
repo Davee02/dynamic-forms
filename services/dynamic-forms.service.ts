@@ -46,6 +46,10 @@ export interface ITdDynamicElementConfig {
   minLength?: any;
   maxLength?: any;
   selections?: string[] | { value: any, label: string }[];
+  source?: string;
+  titlefield?: string;
+  subtitlefield?: string;
+  icon?: string;
   default?: any;
   flex?: number;
   validators?: ITdDynamicElementValidator[];
