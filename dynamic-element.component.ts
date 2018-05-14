@@ -102,27 +102,32 @@ export class TdDynamicElementComponent extends AbstractControlValueAccessor
 
   
   /**
-   * Sets label to be displayed.
+   * Sets keyfield to be displayed.
+   */
+  @Input() keyfield: string = '';
+  
+  /**
+   * Sets name to be displayed.
    */
   @Input() name: string = '';
   
   /**
-   * Sets label to be displayed.
+   * Sets source to be displayed.
    */
   @Input() source: string = '';
 
   /**
-   * Sets label to be displayed.
+   * Sets titlefield to be displayed.
    */
   @Input() titlefield: string = '';
 
   /**
-   * Sets label to be displayed.
+   * Sets subtitlefield to be displayed.
    */
   @Input() subtitlefield: string = '';
 
   /**
-   * Sets label to be displayed.
+   * Sets icon to be displayed.
    */
   @Input() icon: string = '';
 
@@ -159,11 +164,12 @@ export class TdDynamicElementComponent extends AbstractControlValueAccessor
     this._instance.minLength = this.minLength;
     this._instance.maxLength = this.maxLength;
     this._instance.selections = this.selections;
+    this._instance.keyfield = this.keyfield;
     this._instance.name = this.name;
     this._instance.source = this.source;
     this._instance.titlefield = this.titlefield;
     this._instance.subtitlefield = this.subtitlefield;
-    
+
     this._instance.registerOnChange((value: any) => {
       this.value = value;
     });

@@ -11,13 +11,13 @@
                [required]="required">
       
         <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let object of filteredObjects | async" [value]="object.title" (scroll)="loadMore()">
+            <mat-option *ngFor="let object of filteredObjects | async" [value]="object.titlefield" (scroll)="loadMore()">
                 <span>
-                    <mat-icon>{{object.icon}}</mat-icon>
+                    <mat-icon>person</mat-icon>
                     <span class="title">
-                        {{object.title}}
+                        {{object.titlefield}}
                     </span>
-                    <small class="subtitle">{{object.subtitle}}</small>
+                    <small class="subtitle">{{object.subtitlefield}}</small>
                 </span>
             </mat-option>
         </mat-autocomplete>

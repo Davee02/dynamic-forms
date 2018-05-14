@@ -37,10 +37,11 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   // inputitems
   type: string = undefined;
   required: boolean = undefined;
+  keyfield: string = undefined;
   source: string = undefined;
   label: string = '';
-  title: string = undefined;
-  subtitle: string = undefined;
+  titlefield: string = undefined;
+  subtitlefield: string = undefined;
   icon: string = "image";
   
   constructor(dataProvider: DataProvider) {
@@ -53,9 +54,38 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
     if(!text) {
       text = '';
     }
-    
+    console.log('this');
+    console.log(this);
     this.text = text;
-    this.filteredObjects = this.data_provider.fetchData(this.source, this.text, skip, this.show);
+    this.mapData(skip);
+    // this.filteredObjects = this.data_provider.fetchData(this.source, this.text, skip, this.show);
+  }
+
+  mapData(skip) {
+    this.data_provider.fetchData(this.source, this.text, skip, this.show)
+        .subscribe(objs => {
+          let objArr = new Array<any>();
+          objs.forEach(o => {
+            console.log('O', o)
+            let obj = new DynamicObject();
+            obj.keyfield = o[this.keyfield];
+            obj.name = o['name'];
+            obj.type = o['type'];
+            obj.required = o['required'];
+            obj.source = o[this.source];
+            obj.label = o[this.label];
+            obj.titlefield = o[this.titlefield];
+            obj.subtitlefield = o[this.subtitlefield];
+            obj.icon = o[this.icon];
+
+            objArr.push(obj);
+            console.log('pushed: ', obj);
+          });
+
+          this.filteredObjects = Observable.of(objArr);
+        }, (error) => {
+          console.warn(error);
+        })
   }
 
   // load next 5 objects
@@ -63,4 +93,16 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
     this.skip += 5;
     this.filterObjects(this.text, this.skip)
   }
+}
+
+export class DynamicObject {
+  keyfield: string;
+  name: string;
+  type: string;
+  required: boolean;
+  source: string;
+  label: string;
+  titlefield: string;
+  subtitlefield: string;
+  icon: string;
 }
