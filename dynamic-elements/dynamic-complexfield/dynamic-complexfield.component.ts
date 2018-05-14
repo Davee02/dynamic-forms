@@ -61,6 +61,6 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   // load next 5 objects
   loadMore() {
     this.skip += 5;
-    this.filteredObjects(this.text, this.skip)
+    this.filterObjects(this.text, this.skip)
   }
 }
