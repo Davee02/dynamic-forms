@@ -21,8 +21,21 @@
   top: -8px;
 }
 
+.onlytitle {
+  position: absolute;
+  top: 0px;
+}
+
 .subtitle {
   position: absolute;
   top: 10px;
   font-weight: 100;
+}
+
+.circle{
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  margin-right: 10px;
+  text-align: center;
 }

@@ -3,22 +3,33 @@
         <input #elementComplexField
                matInput
                [(ngModel)]="value"
-               (ngModelChange)="filterObjects($event)"
                [formControl]="control"
                [placeholder]="label"
                [matAutocomplete]="auto"
                [type]="type"
                [required]="required">
       
-        <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let object of filteredObjects | async" [value]="object.titlefield" (scroll)="loadMore()">
-                <span>
-                    <mat-icon>person</mat-icon>
-                    <span class="title">
-                        {{object.titlefield}}
+        <mat-autocomplete #auto="matAutocomplete" (scroll)="loadMore()">
+            <mat-option *ngFor="let object of filteredObjects | async" [value]="object.titlefield" >
+                    <span *ngIf="object.subtitlefield">
+                        <!-- <mat-icon>person</mat-icon> -->
+                        <span class="circle">
+                            {{object.titlefield.substring(0,1)}}
+                        </span>
+                        <span class="title">
+                            {{object.titlefield}}
+                        </span>
+                        <small class="subtitle">{{object.subtitlefield}}</small>
                     </span>
-                    <small class="subtitle">{{object.subtitlefield}}</small>
-                </span>
+                    <span *ngIf="!object.subtitlefield || object.subtitlefield === ''">
+                        <!-- <mat-icon>person</mat-icon> -->
+                        <span class="circle">
+                            {{object.titlefield.substring(0,1)}}
+                        </span>
+                        <span class="onlytitle">
+                            {{object.titlefield}}
+                        </span>
+                    </span>
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>

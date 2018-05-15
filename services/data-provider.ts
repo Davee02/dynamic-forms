@@ -523,11 +523,13 @@ export class DataProvider {
   // fetches data from source which matches the text param 
   fetchData(functionUrl, source, text, skip, show) {
     let url = `${functionUrl}/${source}/invoke?text=${text}&skip=${skip}&show=${show}`;
+    console.debug('URL', url)
     this.setHeaders();
 
+    console.debug('skip: ',skip)
+    console.debug('take', show)
+
     return this.http.get<any[]>(url, { headers: this.headers });
-    // let results = this.mock_data.filter(d => d.name.toLowerCase().indexOf(text.toLowerCase()) === 0);
-    // return Observable.of(results.slice(skip, show));
   }
 
   // set headers for request
@@ -536,4 +538,11 @@ export class DataProvider {
       'Authorization': `Bearer ${this.oauth.getAccessToken()}`
     });
   }
+}
+
+export class Response {
+  key: string;
+  skip: number;
+  take: number;
+  results: any[];
 }
