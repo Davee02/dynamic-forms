@@ -50,6 +50,7 @@ export interface ITdDynamicElementConfig {
   titlefield?: string;
   subtitlefield?: string;
   icon?: string;
+  functionUrl?: string;
   default?: any;
   flex?: number;
   validators?: ITdDynamicElementValidator[];

@@ -9,14 +9,11 @@
     flex: 1;
     box-sizing: border-box;
   }
-  
-  // height: fit-content;
-  // width: fit-content;
 }
 
-
-.complexfield mat-icon {
-  // height: 100px;
+::ng-deep .cdk-overlay-pane {
+  /* Do you changes here */
+    min-width:250px;
 }
 
 .title {

@@ -127,6 +127,11 @@ export class TdDynamicElementComponent extends AbstractControlValueAccessor
   @Input() subtitlefield: string = '';
 
   /**
+   * Sets functionUrl.
+   */
+  @Input() functionUrl: string = '';
+
+  /**
    * Sets icon to be displayed.
    */
   @Input() icon: string = '';
@@ -169,6 +174,7 @@ export class TdDynamicElementComponent extends AbstractControlValueAccessor
     this._instance.source = this.source;
     this._instance.titlefield = this.titlefield;
     this._instance.subtitlefield = this.subtitlefield;
+    this._instance.functionUrl = this.functionUrl;
 
     this._instance.registerOnChange((value: any) => {
       this.value = value;

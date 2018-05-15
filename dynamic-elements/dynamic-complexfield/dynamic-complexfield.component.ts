@@ -34,7 +34,7 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   objects: any[] = new Array<any>();
   control: FormControl;
 
-  // inputitems
+  // inputelements
   type: string = undefined;
   required: boolean = undefined;
   keyfield: string = undefined;
@@ -43,6 +43,7 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   titlefield: string = undefined;
   subtitlefield: string = undefined;
   icon: string = "image";
+  functionUrl: string = undefined;
   
   constructor(dataProvider: DataProvider) {
     super();
@@ -57,21 +58,19 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
     console.log('this');
     console.log(this);
     this.text = text;
-    this.mapData(skip);
-    // this.filteredObjects = this.data_provider.fetchData(this.source, this.text, skip, this.show);
+    this.loadData(skip);
   }
 
-  mapData(skip) {
-    this.data_provider.fetchData(this.source, this.text, skip, this.show)
+  loadData(skip) {
+    this.data_provider.fetchData(this.functionUrl, this.source, this.text, skip, this.show)
         .subscribe(objs => {
           let objArr = new Array<any>();
           objs.forEach(o => {
-            console.log('O', o)
             let obj = new DynamicObject();
-            obj.keyfield = o[this.keyfield];
             obj.name = o['name'];
             obj.type = o['type'];
             obj.required = o['required'];
+            obj.keyfield = o[this.keyfield];
             obj.source = o[this.source];
             obj.label = o[this.label];
             obj.titlefield = o[this.titlefield];
@@ -79,7 +78,7 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
             obj.icon = o[this.icon];
 
             objArr.push(obj);
-            console.log('pushed: ', obj);
+            console.debug('pushed: ', obj);
           });
 
           this.filteredObjects = Observable.of(objArr);
