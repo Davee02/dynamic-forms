@@ -25,7 +25,7 @@ export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
 export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor implements ControlValueAccessor, OnInit {
   private data_provider: DataProvider;
   private skip: number = 0;
-  private show: number = 5;
+  private take: number = 5;
   private text: string = '';
   private loadingData: boolean = false;
 
@@ -62,7 +62,7 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
 
   filter(text): Observable<any[]> {
     this.text = text;
-    return this.data_provider.fetchData(this.functionUrl, this.source, text, this.skip, this.show)
+    return this.data_provider.fetchData(this.functionUrl, this.source, text, this.skip, this.take)
       .pipe(
         map(response => {
             let dynObjArray = new Array<DynamicObject>();

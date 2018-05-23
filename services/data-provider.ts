@@ -521,13 +521,13 @@ export class DataProvider {
   }
 
   // fetches data from source which matches the text param 
-  fetchData(functionUrl, source, text, skip, show) {
-    let url = `${functionUrl}/${source}/invoke?text=${text}&skip=${skip}&show=${show}`;
+  fetchData(functionUrl, source, text, skip, take) {
+    let url = `${functionUrl}/${source}/invoke?text=${text}&skip=${skip}&take=${take}`;
     console.debug('URL', url)
     this.setHeaders();
 
     console.debug('skip: ',skip)
-    console.debug('take', show)
+    console.debug('take', take)
 
     return this.http.get<any[]>(url, { headers: this.headers });
   }
