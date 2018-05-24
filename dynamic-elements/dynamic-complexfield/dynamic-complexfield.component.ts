@@ -1,11 +1,17 @@
 import { Component, forwardRef, OnInit } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, concat } from 'rxjs/operators';
 import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/observable/combineLatest';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
 import { DataProvider } from '../../services/data-provider';
+import { MatAutocomplete } from '@angular/material';
 
 export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -28,6 +34,8 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   private take: number = 5;
   private text: string = '';
   private loadingData: boolean = false;
+  private loadingMore: boolean = false;
+  private ignoreScroll: boolean = false;
 
   // autocomplete properties
   filteredObjects: Observable<any[]>;
@@ -49,20 +57,64 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
     super();
     this.data_provider = dataProvider;
   }
-
+  
   ngOnInit(): void {
     this.control = new FormControl();
     this.filteredObjects = this.control.valueChanges
-        .startWith('')
-        .debounceTime(300)
-        .switchMap(val => {
-          return this.filter(val)
-        })
+    .startWith('')
+    .debounceTime(300)
+    .do(() => {
+      this.loadingData = true;
+      this.ignoreScroll = true;
+    })
+    .switchMap(val => {
+      this.skip = 0;
+      this.text = val;
+      return this.filter();
+    })
+    .do(() => {
+      this.loadingData = false;
+      this.ignoreScroll = false;
+    })
+  }
+  
+  // load next 5 objects
+  onScroll(event) {
+    if(!this.ignoreScroll){
+      let scrollTop = event.target.scrollTop;
+      let scrollHeight = event.target.scrollHeight;
+      let childElementCount = event.target.childElementCount;
+
+      if((scrollHeight / childElementCount) == scrollTop){
+        console.log('can load more')
+        this.loadMore();
+      }
+    }
+  }
+  
+  loadMore() {
+    console.log('loading 5 more')
+    this.skip += 5;
+
+    this.filteredObjects = this.mergeObservableArrays();
+
   }
 
-  filter(text): Observable<any[]> {
-    this.text = text;
-    return this.data_provider.fetchData(this.functionUrl, this.source, text, this.skip, this.take)
+  mergeObservableArrays(): Observable<any[]> {
+    let merged = new Observable<Array<any>>();
+    let newArray = this.filter();
+
+    return Observable.combineLatest(this.filteredObjects, newArray)
+      .do(() => this.loadingData = true)
+      .map(([existingArr, newArr]) => [...existingArr, ...newArr])
+      .do(() => {
+        this.ignoreScroll = true;
+        this.loadingData = false;
+      })
+  }
+
+  filter(): Observable<any[]> {
+    return this.data_provider.fetchData(this.functionUrl, this.source, this.text, this.skip, this.take)
       .pipe(
         map(response => {
             let dynObjArray = new Array<DynamicObject>();
@@ -100,11 +152,6 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
             }
         })
       )
-  }
-  // load next 5 objects
-  loadMore() {
-    this.skip += 5;
-    this.filter(this.text)
   }
 }
 

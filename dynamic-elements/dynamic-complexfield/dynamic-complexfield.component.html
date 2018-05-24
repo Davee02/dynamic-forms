@@ -9,28 +9,33 @@
                [type]="type"
                [required]="required">
       
-        <mat-autocomplete #auto="matAutocomplete" (scroll)="loadMore()">
-            <mat-option *ngFor="let object of filteredObjects | async" [value]="object.titlefield" >
-                    <span *ngIf="object.subtitlefield">
-                        <!-- <mat-icon>person</mat-icon> -->
-                        <span class="circle">
-                            {{object.titlefield.substring(0,1)}}
+        <mat-autocomplete class="auto" #auto="matAutocomplete">
+            <div style="max-height: 192px; overflow-y: auto" (scroll)="onScroll($event)">
+                <mat-option *ngFor="let object of filteredObjects | async" [value]="object.titlefield">
+                        <span *ngIf="object.subtitlefield">
+                            <!-- <mat-icon>person</mat-icon> -->
+                            <span class="circle">
+                                {{object.titlefield.substring(0,1)}}
+                            </span>
+                            <span class="title">
+                                {{object.titlefield}}
+                            </span>
+                            <small class="subtitle">{{object.subtitlefield}}</small>
                         </span>
-                        <span class="title">
-                            {{object.titlefield}}
+                        <span *ngIf="!object.subtitlefield || object.subtitlefield === ''">
+                            <!-- <mat-icon>person</mat-icon> -->
+                            <span class="circle">
+                                {{object.titlefield.substring(0,1)}}
+                            </span>
+                            <span class="onlytitle">
+                                {{object.titlefield}}
+                            </span>
                         </span>
-                        <small class="subtitle">{{object.subtitlefield}}</small>
-                    </span>
-                    <span *ngIf="!object.subtitlefield || object.subtitlefield === ''">
-                        <!-- <mat-icon>person</mat-icon> -->
-                        <span class="circle">
-                            {{object.titlefield.substring(0,1)}}
-                        </span>
-                        <span class="onlytitle">
-                            {{object.titlefield}}
-                        </span>
-                    </span>
-            </mat-option>
+                </mat-option>
+                <mat-option *ngIf="loadingData">
+                    loading ...
+                </mat-option>
+            </div>
         </mat-autocomplete>
     </mat-form-field>
 </div>
