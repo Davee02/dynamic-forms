@@ -29,13 +29,13 @@ export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   templateUrl: './dynamic-complexfield.component.html',
 })
 export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor implements ControlValueAccessor, OnInit {
-  private data_provider: DataProvider;
-  private skip: number = 0;
-  private take: number = 5;
-  private text: string = '';
-  private loadingData: boolean = false;
-  private loadingMore: boolean = false;
-  private ignoreScroll: boolean = false;
+  data_provider: DataProvider;
+  skip: number = 0;
+  take: number = 5;
+  text: string = '';
+  loadingData: boolean = false;
+  loadingMore: boolean = false;
+  ignoreScroll: boolean = false;
 
   // autocomplete properties
   filteredObjects: Observable<any[]>;
