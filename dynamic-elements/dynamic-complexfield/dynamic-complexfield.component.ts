@@ -86,14 +86,14 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
       let childElementCount = event.target.childElementCount;
 
       if((scrollHeight / childElementCount) == scrollTop){
-        console.log('can load more')
+        console.debug('can load more')
         this.loadMore();
       }
     }
   }
   
   loadMore() {
-    console.log('loading 5 more')
+    console.debug('loading 5 more')
     this.skip += 5;
 
     this.filteredObjects = this.mergeObservableArrays();
@@ -136,14 +136,10 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
 
                 // map response elements
                 obj.keyfield = response['key'];
+                obj.key = result[response['key']];
                 obj.name = result['name'];
-                obj.type = result['type'];
-                obj.required = result['required'];
-                obj.source = result[this.source];
-                obj.label = result[this.label];
                 obj.titlefield = title;
                 obj.subtitlefield = subtitle;
-                obj.icon = 'image';
 
                 dynObjArray.push(obj)
               });
@@ -153,10 +149,15 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
         })
       )
   }
+
+  displayView(object?: any): string | undefined {
+    return object ? object.titlefield : undefined;
+  }
 }
 
 export class DynamicObject {
   keyfield: string;
+  key: string;
   name: string;
   type: string;
   required: boolean;
