@@ -11,7 +11,7 @@
       
         <mat-autocomplete class="auto" #auto="matAutocomplete" [displayWith]="displayView">
             <div style="max-height: 192px; overflow-y: auto" (scroll)="onScroll($event)">
-                <mat-option *ngFor="let object of filteredObjects | async" [value]="object">
+                <mat-option *ngFor="let object of objects" [value]="object">
                         <span *ngIf="object.subtitlefield">
                             <!-- <mat-icon>person</mat-icon> -->
                             <span class="circle">
@@ -32,7 +32,7 @@
                             </span>
                         </span>
                 </mat-option>
-                <mat-option *ngIf="loadingData">
+                <mat-option disabled *ngIf="loadingData">
                     loading ...
                 </mat-option>
             </div>

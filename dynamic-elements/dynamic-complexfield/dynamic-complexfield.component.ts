@@ -1,13 +1,9 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, forwardRef, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { startWith, map, concat } from 'rxjs/operators';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/concat';
-import 'rxjs/add/operator/merge';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/observable/combineLatest';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
 import { DataProvider } from '../../services/data-provider';
@@ -28,13 +24,12 @@ export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   styleUrls: [ './dynamic-complexfield.component.scss' ],
   templateUrl: './dynamic-complexfield.component.html',
 })
-export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor implements ControlValueAccessor, OnInit {
+export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor implements ControlValueAccessor, OnInit, AfterViewInit {
   data_provider: DataProvider;
   skip: number = 0;
   take: number = 5;
   text: string = '';
   loadingData: boolean = false;
-  loadingMore: boolean = false;
   ignoreScroll: boolean = false;
 
   // autocomplete properties
@@ -53,29 +48,43 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   icon: string = "image";
   functionUrl: string = undefined;
   
-  constructor(dataProvider: DataProvider) {
+  constructor(dataProvider: DataProvider, private cdRef: ChangeDetectorRef) {
     super();
     this.data_provider = dataProvider;
   }
   
-  ngOnInit(): void {
+  ngAfterViewInit() {
     this.control = new FormControl();
-    this.filteredObjects = this.control.valueChanges
-    .startWith('')
-    .debounceTime(300)
-    .do(() => {
-      this.loadingData = true;
-      this.ignoreScroll = true;
-    })
-    .switchMap(val => {
-      this.skip = 0;
-      this.text = val;
-      return this.filter();
-    })
-    .do(() => {
-      this.loadingData = false;
-      this.ignoreScroll = false;
-    })
+    let temp = new DynamicObject();
+    this.control.valueChanges
+        .startWith('')
+        .debounceTime(300)
+        .subscribe(val => {
+          this.loadingData = true;
+          this.ignoreScroll = true;
+          this.skip = 0;
+
+          this.filter(val)
+            .subscribe(res => {
+              console.debug('form control values: ', res)
+              this.objects = new Array<any>();
+              res.forEach(result => {
+                this.objects.push(result);
+              })
+
+              this.loadingData = false;
+              this.ignoreScroll = false;
+
+              this.cdRef.detectChanges();
+            }, (error) => {
+              console.warn(error);
+              this.loadingData = false;
+              this.ignoreScroll = false;
+            })
+        })
+  }
+
+  ngOnInit(): void {
   }
   
   // load next 5 objects
@@ -87,34 +96,30 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
 
       if((scrollHeight / childElementCount) == scrollTop){
         console.debug('can load more')
-        this.loadMore();
+        this.loadingData = true;
+        this.loadMore(event);
       }
     }
   }
   
-  loadMore() {
+  loadMore(event) {
     console.debug('loading 5 more')
     this.skip += 5;
 
-    this.filteredObjects = this.mergeObservableArrays();
-
-  }
-
-  mergeObservableArrays(): Observable<any[]> {
-    let merged = new Observable<Array<any>>();
-    let newArray = this.filter();
-
-    return Observable.combineLatest(this.filteredObjects, newArray)
-      .do(() => this.loadingData = true)
-      .map(([existingArr, newArr]) => [...existingArr, ...newArr])
-      .do(() => {
-        this.ignoreScroll = true;
-        this.loadingData = false;
+    this.filter()
+    .subscribe(res => {
+      res.forEach(result => {
+        this.objects.push(result);
       })
+      
+      this.loadingData = false;
+    }, (error) => {
+      console.warn(error);
+    })
   }
 
-  filter(): Observable<any[]> {
-    return this.data_provider.fetchData(this.functionUrl, this.source, this.text, this.skip, this.take)
+  filter(term: string = ""): Observable<any[]> {
+    return this.data_provider.fetchData(this.functionUrl, this.source, !term ? "" : term, this.skip, this.take)
       .pipe(
         map(response => {
             let dynObjArray = new Array<DynamicObject>();
