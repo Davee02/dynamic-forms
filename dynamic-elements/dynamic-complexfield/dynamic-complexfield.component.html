@@ -2,6 +2,7 @@
     <mat-form-field class="td-dynamic-complexfield-field">
         <input #elementComplexField
                matInput
+               
                [(ngModel)]="value"
                [formControl]="control"
                [placeholder]="label"
@@ -32,8 +33,9 @@
                             </span>
                         </span>
                 </mat-option>
-                <mat-option disabled *ngIf="loadingData">
-                    loading ...
+                <mat-option disabled class="loading-option" *ngIf="loadingData">
+                    <div class="loading-option-text">loading...</div>
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                 </mat-option>
             </div>
         </mat-autocomplete>

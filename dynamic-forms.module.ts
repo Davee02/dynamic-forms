@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { CovalentCommonModule } from '@covalent/core/common';
 import { CovalentFileModule } from '@covalent/core/file';
@@ -73,6 +74,7 @@ const TD_DYNAMIC_FORMS_ENTRY_COMPONENTS: Type<any>[] = [
     MatButtonModule,
     MatDatepickerModule,
     MatAutocompleteModule,
+    MatProgressBarModule,
     CovalentCommonModule,
     CovalentFileModule,
     OAuthModule

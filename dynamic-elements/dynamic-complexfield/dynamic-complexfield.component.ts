@@ -68,14 +68,15 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
             .subscribe(res => {
               console.debug('form control values: ', res)
               this.objects = new Array<any>();
-              res.forEach(result => {
-                this.objects.push(result);
+              res.forEach(element => {
+                if(!this.objects.find(o => o.key === element.key)) {
+                  this.objects.push(element);
+                }
               })
 
+              this.cdRef.detectChanges();
               this.loadingData = false;
               this.ignoreScroll = false;
-
-              this.cdRef.detectChanges();
             }, (error) => {
               console.warn(error);
               this.loadingData = false;
@@ -108,8 +109,10 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
 
     this.filter()
     .subscribe(res => {
-      res.forEach(result => {
-        this.objects.push(result);
+      res.forEach(element => {
+        if(!this.objects.find(o => o.key === element.key)) {
+          this.objects.push(element);
+        }
       })
       
       this.loadingData = false;
