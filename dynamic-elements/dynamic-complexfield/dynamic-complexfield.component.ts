@@ -1,4 +1,5 @@
 import { Component, forwardRef, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { startWith, map, concat } from 'rxjs/operators';
@@ -7,7 +8,7 @@ import 'rxjs/add/operator/startWith';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
 import { DataProvider } from '../../services/data-provider';
-import { MatAutocomplete } from '@angular/material';
+import { MatAutocomplete, MatChipInputEvent, MatAutocompleteSelectedEvent } from '@angular/material';
 
 export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -35,7 +36,14 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   // autocomplete properties
   filteredObjects: Observable<any[]>;
   objects: any[] = new Array<any>();
+  selectedObject: any;
   control: FormControl;
+
+  // chip props
+  selectable: boolean = true;
+  removable: boolean = true;
+  addOnBlur: boolean = false;
+  separatorKeysCodes = [ENTER, COMMA];
 
   // inputelements
   type: string = undefined;
@@ -160,6 +168,16 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
 
   displayView(object?: any): string | undefined {
     return object ? object.titlefield : undefined;
+  }
+
+  optionSelected(event: MatAutocompleteSelectedEvent): void {
+    if(event && event.option) {
+      this.selectedObject = event.option.value;
+    }
+  }
+
+  removeSelection() {
+    this.selectedObject = undefined;
   }
 }
 
