@@ -16,7 +16,6 @@
 }
 
 ::ng-deep .cdk-overlay-pane {
-  /* Do you changes here */
     min-width:250px;
 }
 
@@ -51,4 +50,17 @@
 .loading-option-text {
   margin: 0 16px;
   text-align: center;
+}
+
+// custom styling for input placeholder/label 
+::ng-deep .mat-input-infix {
+  height:32px;
+}
+
+::ng-deep .mat-input-placeholder {
+  margin-top: 8px;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  margin-top: 0;
 }

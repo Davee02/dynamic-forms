@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, forwardRef, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
@@ -8,7 +8,7 @@ import 'rxjs/add/operator/startWith';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
 import { DataProvider } from '../../services/data-provider';
-import { MatAutocomplete, MatChipInputEvent, MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocomplete, MatChipInputEvent, MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatInput } from '@angular/material';
 
 export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -26,6 +26,7 @@ export const COMPLEXFIELD_CONTROL_VALUE_ACCESSOR: any = {
   templateUrl: './dynamic-complexfield.component.html',
 })
 export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor implements ControlValueAccessor, OnInit, AfterViewInit {
+  @ViewChild(MatAutocompleteTrigger) autocompleteTrigger: MatAutocompleteTrigger;
   data_provider: DataProvider;
   skip: number = 0;
   take: number = 5;
@@ -68,32 +69,39 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
         .startWith('')
         .debounceTime(300)
         .subscribe(val => {
+          console.log('control changed')
           this.loadingData = true;
           this.ignoreScroll = true;
           this.skip = 0;
 
-          this.filter(val)
-            .subscribe(res => {
-              console.debug('form control values: ', res)
-              this.objects = new Array<any>();
-              res.forEach(element => {
-                if(!this.objects.find(o => o.key === element.key)) {
-                  this.objects.push(element);
-                }
-              })
-
-              this.cdRef.detectChanges();
-              this.loadingData = false;
-              this.ignoreScroll = false;
-            }, (error) => {
-              console.warn(error);
-              this.loadingData = false;
-              this.ignoreScroll = false;
-            })
+          this.loadData(val);
         })
   }
 
   ngOnInit(): void {
+  }
+
+  loadData(val: string) {
+    // this.cdRef.detach();
+    this.filter(val)
+      .subscribe(res => {
+        console.debug('form control values: ', res)
+        this.objects = new Array<any>();
+        res.forEach(element => {
+          if(!this.objects.find(o => o.key === element.key)) {
+            this.objects.push(element);
+          }
+        })
+
+        this.cdRef.detectChanges();
+        this.cdRef.reattach();
+        this.loadingData = false;
+        this.ignoreScroll = false;
+      }, (error) => {
+        console.warn(error);
+        this.loadingData = false;
+        this.ignoreScroll = false;
+      })
   }
   
   // load next 5 objects
@@ -130,7 +138,7 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   }
 
   filter(term: string = ""): Observable<any[]> {
-    return this.data_provider.fetchData(this.functionUrl, this.source, !term ? "" : term, this.skip, this.take)
+    return this.data_provider.fetchData(this.functionUrl, this.source, !term || typeof term !== 'string' ? "" : term, this.skip, this.take)
       .pipe(
         map(response => {
             let dynObjArray = new Array<DynamicObject>();
@@ -178,6 +186,10 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
 
   removeSelection() {
     this.selectedObject = undefined;
+    this.loadData('');
+    setTimeout(() => {
+      this.autocompleteTrigger.openPanel()
+    }, 0)
   }
 }
 
