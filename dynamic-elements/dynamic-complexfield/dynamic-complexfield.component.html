@@ -1,5 +1,5 @@
 <div class="td-dynamic-complexfield-wrapper">
-    <mat-form-field class="td-dynamic-complexfield-field">
+    <mat-form-field class="td-dynamic-complexfield-field" (click)="onClickInput()">
         <mat-chip-list #chipList>
             <mat-chip *ngIf="selectedObject" 
                       [selectable]="selectable"
@@ -47,6 +47,9 @@
                 <mat-option disabled class="loading-option" *ngIf="loadingData">
                     <div class="loading-option-text">loading...</div>
                     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </mat-option>
+                <mat-option disabled class="error-option" *ngIf="error">
+                    <td-message sublabel="Error! Could not load the corresponding function." color="warn" icon="error"></td-message>
                 </mat-option>
             </div>
         </mat-autocomplete>

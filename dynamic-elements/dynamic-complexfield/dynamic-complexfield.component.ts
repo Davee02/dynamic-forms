@@ -56,6 +56,7 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   subtitlefield: string = undefined;
   icon: string = "image";
   functionUrl: string = undefined;
+  error: any = undefined;
   
   constructor(dataProvider: DataProvider, private cdRef: ChangeDetectorRef) {
     super();
@@ -64,25 +65,31 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   
   ngAfterViewInit() {
     this.control = new FormControl();
-    let temp = new DynamicObject();
-    this.control.valueChanges
-        .startWith('')
-        .debounceTime(300)
-        .subscribe(val => {
-          console.log('control changed')
-          this.loadingData = true;
-          this.ignoreScroll = true;
-          this.skip = 0;
-
-          this.loadData(val);
-        })
   }
 
   ngOnInit(): void {
   }
 
+  onClickInput() {
+    this.createControlValueChangesEvent();
+  }
+
+  createControlValueChangesEvent() {
+    this.control.valueChanges
+      .startWith('')
+      .debounceTime(300)
+      .subscribe(val => {
+        console.log('control changed')
+        this.loadingData = true;
+        this.ignoreScroll = true;
+        this.skip = 0;
+
+        this.loadData(val);
+      })
+  }
+
   loadData(val: string) {
-    // this.cdRef.detach();
+    this.error = undefined;
     this.filter(val)
       .subscribe(res => {
         console.debug('form control values: ', res)
@@ -92,16 +99,21 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
             this.objects.push(element);
           }
         })
-
-        this.cdRef.detectChanges();
-        this.cdRef.reattach();
+        this.detectChanges();
         this.loadingData = false;
         this.ignoreScroll = false;
       }, (error) => {
         console.warn(error);
         this.loadingData = false;
         this.ignoreScroll = false;
+        this.error = error;
+        this.detectChanges();
       })
+  }
+
+  detectChanges() {
+    this.cdRef.detectChanges();
+    this.cdRef.reattach();
   }
   
   // load next 5 objects
@@ -164,6 +176,7 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
                 obj.name = result['name'];
                 obj.titlefield = title;
                 obj.subtitlefield = subtitle;
+                obj.required = response['required'];
 
                 dynObjArray.push(obj)
               });
@@ -204,4 +217,5 @@ export class DynamicObject {
   titlefield: string;
   subtitlefield: string;
   icon: string;
+  error: any;
 }

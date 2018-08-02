@@ -16,6 +16,7 @@ import { MatChipsModule } from '@angular/material/chips';
 
 import { CovalentCommonModule } from '@covalent/core/common';
 import { CovalentFileModule } from '@covalent/core/file';
+import { CovalentMessageModule } from '@covalent/core/message';
 
 import { TdDynamicFormsComponent } from './dynamic-forms.component';
 import { TdDynamicElementComponent, TdDynamicElementDirective, TdDynamicFormsErrorTemplate } from './dynamic-element.component';
@@ -79,6 +80,7 @@ const TD_DYNAMIC_FORMS_ENTRY_COMPONENTS: Type<any>[] = [
     MatChipsModule,
     CovalentCommonModule,
     CovalentFileModule,
+    CovalentMessageModule,
     OAuthModule
   ],
   exports: [

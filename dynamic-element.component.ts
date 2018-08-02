@@ -131,6 +131,11 @@ export class TdDynamicElementComponent extends AbstractControlValueAccessor
    */
   @Input() functionUrl: string = '';
 
+   /**
+   * Sets error.
+   */
+  @Input() error: any = undefined;
+
   /**
    * Sets icon to be displayed.
    */
@@ -175,6 +180,7 @@ export class TdDynamicElementComponent extends AbstractControlValueAccessor
     this._instance.titlefield = this.titlefield;
     this._instance.subtitlefield = this.subtitlefield;
     this._instance.functionUrl = this.functionUrl;
+    this._instance.error = this.error;
 
     this._instance.registerOnChange((value: any) => {
       this.value = value;

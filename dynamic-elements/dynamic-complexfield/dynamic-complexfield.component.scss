@@ -1,5 +1,14 @@
 .mat-form-field {
   display: block;
+
+  .error_wrapper > mat-error {
+    font-size: 70%;
+    margin-top: 20px;
+  }
+}
+
+.mat-input-placeholder {
+  color: #e53935;
 }
 
 .td-dynamic-input-wrapper {
@@ -43,7 +52,7 @@
   text-align: center;
 }
 
-.loading-option {
+.loading-option, .error-option {
   padding: 0;
 }
 
