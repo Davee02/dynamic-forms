@@ -30,6 +30,6 @@
   ],
   "dependencies": {
     "@covalent/core": "^2.0.0",
-    "angular-oauth2-oidc": "git+https://git@github.com/leuchterag/angular-oauth2-oidc.git"
+    "angular-oauth2-oidc": "github:leuchterag/angular-oauth2-oidc"
   }
 }
