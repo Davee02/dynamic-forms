@@ -29,7 +29,7 @@
     "Steven Ov <steven.ov@teradata.com>"
   ],
   "dependencies": {
-    "@covalent/core": "^1.0.0",
+    "@covalent/core": "^2.0.0",
     "angular-oauth2-oidc": "git+https://git@github.com/leuchterag/angular-oauth2-oidc.git"
   }
 }
