@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
 import { TdDynamicFormsService, ITdDynamicElementConfig } from './services/dynamic-forms.service';
 import { TdDynamicFormsErrorTemplate } from './dynamic-element.component';
 
-import { timer } from 'rxjs/observable/timer';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'td-dynamic-forms',

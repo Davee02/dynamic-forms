@@ -1,10 +1,8 @@
 import { Component, forwardRef, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { startWith, map, concat } from 'rxjs/operators';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/startWith';
+import { Observable } from 'rxjs';
+import { startWith, map, concat, debounceTime } from 'rxjs/operators';
 
 import { AbstractControlValueAccessor } from '../abstract-control-value-accesor';
 import { DataProvider } from '../../services/data-provider';
@@ -75,16 +73,16 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
   }
 
   createControlValueChangesEvent() {
-    this.control.valueChanges
-      .startWith('')
-      .debounceTime(300)
-      .subscribe(val => {
+    this.control.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300)
+    ).subscribe(val => {
         console.log('control changed')
         this.loadingData = true;
         this.ignoreScroll = true;
         this.skip = 0;
 
-        this.loadData(val);
+        this.loadData(val.toString());
       })
   }
 

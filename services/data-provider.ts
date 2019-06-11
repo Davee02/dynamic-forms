@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { OAuthService } from 'angular-oauth2-oidc/src';
-import 'rxjs/add/observable/of';
 
 const BASE_URL = 'http://api.docugate.ch/v1/function';
 
