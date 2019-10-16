@@ -82,7 +82,9 @@ export class TdDynamicComplexfieldComponent extends AbstractControlValueAccessor
         this.ignoreScroll = true;
         this.skip = 0;
 
-        this.loadData(val.toString());
+        if(!(val instanceof DynamicObject)){ // ignore valuechange caused by the selection of a searched item
+          this.loadData(val.toString());
+        }
       })
   }
 
